@@ -1,13 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct3D9;
 using System;
 using System.Drawing;
 using TurnOnTheLight.Scenes;
 using TurnOnTheLight.System;
+using Blend = Microsoft.Xna.Framework.Graphics.Blend;
 using Color = Microsoft.Xna.Framework.Color;
 using Point = Microsoft.Xna.Framework.Point;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using SamplerState = Microsoft.Xna.Framework.Graphics.SamplerState;
 
 namespace TurnOnTheLight;
 
@@ -45,6 +48,7 @@ public class TurnOnTheLight : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+        _lightTexture = Content.Load<Texture2D>("light");
 
         _sceneManager = new SceneManager();
         _menu = new Menu(Content);
@@ -67,28 +71,21 @@ public class TurnOnTheLight : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.White);
 
         GraphicsDevice.SetRenderTarget(RenderTarget.RenderTarget2D);
+        GraphicsDevice.Clear(Color.Transparent);
 
         _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
 
-        if(_sceneManager.CurrentScene != _levelMenu)
-        {
-            _sceneManager.CurrentScene?.Draw(_spriteBatch);
-        }
+        _sceneManager.CurrentScene?.Draw(_spriteBatch);
 
         _spriteBatch.End();
 
-        _spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied);
+        _spriteBatch.Begin(SpriteSortMode.Immediate, blendState: _eraseBlend );
 
-        if (_sceneManager.CurrentScene == _levelMenu)
-        {
-            _sceneManager.CurrentScene?.Draw(_spriteBatch);
-        }
+        _spriteBatch.Draw(_lightTexture, new Vector2(0, 0), Color.White);
 
         _spriteBatch.End();
-
 
 
         GraphicsDevice.SetRenderTarget(null);
@@ -111,13 +108,24 @@ public class TurnOnTheLight : Game
     }
 
 
+
     private SceneManager _sceneManager;
     private Menu _menu;
     private LevelMenu _levelMenu;
 
-    private bool _isResizing = false;
+    private Texture2D _lightTexture;
 
+    private bool _isResizing = false;
     private const int NATIVE_WINDOW_WIDTH = 1280;
     private const int NATIVE_WINDOW_HEIGHT = 720;
-   
+
+    private BlendState _eraseBlend = new BlendState()
+    {
+        ColorSourceBlend = Blend.Zero,
+        ColorDestinationBlend = Blend.InverseSourceAlpha,
+
+        AlphaSourceBlend = Blend.Zero,
+        AlphaDestinationBlend = Blend.InverseSourceAlpha
+    };
+
 }

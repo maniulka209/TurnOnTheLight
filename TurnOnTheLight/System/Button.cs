@@ -47,8 +47,8 @@ namespace TurnOnTheLight.System
         {
             _mouseState = Mouse.GetState();
 
-            float correctedX = (_mouseState.X - RenderTarget.DestinationRectangle.X) * RenderTarget.Scale;
-            float correctedY = (_mouseState.Y - RenderTarget.DestinationRectangle.Y) * RenderTarget.Scale;
+            float correctedX = (_mouseState.X - RenderTarget.DestinationRectangle.X) / RenderTarget.Scale;
+            float correctedY = (_mouseState.Y - RenderTarget.DestinationRectangle.Y) / RenderTarget.Scale;
 
             Point mousePosition = new Point((int)correctedX, (int)correctedY);
 

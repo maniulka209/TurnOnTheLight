@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RenderTargetUsage = Microsoft.Xna.Framework.Graphics.RenderTargetUsage;
 
 namespace TurnOnTheLight.System
 {
@@ -19,8 +20,8 @@ namespace TurnOnTheLight.System
             float scaleY = (float)size.Y / RenderTarget2D.Height;
             float scale = Math.Min(scaleX, scaleY);
 
-            int newWidth = RenderTarget2D.Width * (int)scale;
-            int newHeight = RenderTarget2D.Height * (int)scale;
+            int newWidth = (int)(RenderTarget2D.Width * scale);
+            int newHeight = (int)(RenderTarget2D.Height * scale);
             int newX = (size.X - newWidth) /2;
             int newY = (size.Y - newHeight) /2;
 
@@ -29,7 +30,12 @@ namespace TurnOnTheLight.System
         }
         static public void InitRenerTarget2D(GraphicsDevice graphicsDevice)
         {
-            RenderTarget2D = new RenderTarget2D(graphicsDevice, NATIVE_WINDOW_WIDTH, NATIVE_WINDOW_HEIGHT);
+            RenderTarget.RenderTarget2D = new RenderTarget2D(
+            graphicsDevice,
+            NATIVE_WINDOW_WIDTH,
+            NATIVE_WINDOW_HEIGHT
+            );
+
             _graphicsDevice = graphicsDevice;
         }
 
@@ -38,7 +44,7 @@ namespace TurnOnTheLight.System
         static public float Scale { 
             get
             {   
-                return RenderTarget2D.Height / DestinationRectangle.Height;
+                return (float)DestinationRectangle.Height / RenderTarget2D.Height;
             }
         }
 
