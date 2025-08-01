@@ -14,30 +14,37 @@ namespace TurnOnTheLight.Scenes
 {
     class LevelMenu: IScene
     {
-        public LevelMenu(ContentManager content)
+        public LevelMenu(ContentManager content, SceneManager sceneManager)
         {
             _contentManager = content;
+            _sceneManager = sceneManager;
             Load();
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            _backgroundSprite.Draw(spriteBatch, new Vector2(0,0));
+            _backgroundSprite.Draw(spriteBatch, Vector2.Zero);
         }
 
         public void Load()
         {
-            _backgroundSpritesheet = _contentManager.Load<Texture2D>("background");
+            _backgroundSpritesheet = _contentManager.Load<Texture2D>("backgroundMenu");
 
-            _backgroundSprite = new Sprite(0, 0, 128, 72, _backgroundSpritesheet, 10f);
+            _backgroundSprite = new Sprite(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, _backgroundSpritesheet, BACKGROUND_SCALE);
+            Mask.TurnOn();
         }
-
+         
         public void Update(GameTime gameTime)
         {
+            
         }
 
         private ContentManager _contentManager;
-        
+        private SceneManager _sceneManager;
+
         private Texture2D _backgroundSpritesheet;
+        private const int BACKGROUND_WIDTH = 128;
+        private const int BACKGROUND_HEIGHT = 128;
+        private const float BACKGROUND_SCALE = 10f;
 
         private Sprite _backgroundSprite;
     }
