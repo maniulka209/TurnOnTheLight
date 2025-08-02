@@ -31,15 +31,20 @@ namespace TurnOnTheLight.Scenes
 
             _backgroundSprite = new Sprite(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, _backgroundSpritesheet, BACKGROUND_SCALE);
             Mask.TurnOn();
+            Mask.TurnOffWithAniamtion();
         }
          
         public void Update(GameTime gameTime)
         {
-            
+           
+
         }
 
         private ContentManager _contentManager;
         private SceneManager _sceneManager;
+
+        private float _lightAnimationTimer = 0;
+
 
         private Texture2D _backgroundSpritesheet;
         private const int BACKGROUND_WIDTH = 128;

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SharpDX.Direct2D1;
+using SharpDX.MediaFoundation.DirectX;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,11 +22,14 @@ namespace TurnOnTheLight.System
         public static Vector2 LightPosition { get; set; } = Vector2.Zero;
 
         public static bool IsOn { get; private set; } = false;
-        
+
+        public static float LightScale { get; private set; } = 7f;
+
         public static void MaskInit(Texture2D backgroundTexture, Texture2D lightSprite)
         {
-            _lightSprite = new Sprite(0, 0, LIGHT_WIDTH, LIGHT_HEIGHT, lightSprite, LIGHT_SCALE);
+            _lightSprite = new Sprite(0, 0, LIGHT_WIDTH, LIGHT_HEIGHT, lightSprite, LightScale);
             _backgroundSprite = new Sprite(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, backgroundTexture, BACKGROUND_SCALE);
+            _isLightAnimationOn = false;
         }
         public static void DrawBackground(SpriteBatch spriteBatch)
         {
@@ -51,10 +55,28 @@ namespace TurnOnTheLight.System
 
                 Point mousePosition = new Point((int)correctedX, (int)correctedY);
 
-                LightPosition = new Vector2(mousePosition.X, mousePosition.Y);
+                LightPosition = new Vector2(mousePosition.X - (LIGHT_WIDTH*LightScale)/2 , mousePosition.Y - (LIGHT_HEIGHT * LightScale)/2 );
+
+                if(_isLightAnimationOn)
+                {
+                    _lightAnimationTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (_lightAnimationTimer < LIGHT_ANIMATION_DURATION)
+                    {
+                        ChangeLightSize(LightScale * LIGHT_ANIMATION_VELOCITY);
+                    }
+                    else
+                    {
+                        TurnOff();
+                    }
+                }
+
             }
         }
-
+        public static void ChangeLightSize(float size)
+        {
+            _lightSprite.Scale = size;
+            LightScale = size;
+        }
         public static  void TurnOn()
         {
             IsOn = true;
@@ -63,9 +85,22 @@ namespace TurnOnTheLight.System
         {
             IsOn = false;
         }
+        public static void TurnOffWithAniamtion()
+        {
+            if (!_isLightAnimationOn)
+            {
+               _isLightAnimationOn = true;
+               _lightAnimationTimer = 0;
+            }
+        }
 
         private static Sprite _backgroundSprite;
         private static Sprite _lightSprite;
+
+        private static float _lightAnimationTimer;
+        private static bool _isLightAnimationOn;
+        private const float LIGHT_ANIMATION_VELOCITY = 1.03f;
+        private const float LIGHT_ANIMATION_DURATION = 2f;
 
         private const int BACKGROUND_WIDTH = 128;
         private const int BACKGROUND_HEIGHT = 72;
@@ -73,7 +108,6 @@ namespace TurnOnTheLight.System
 
         private const int LIGHT_WIDTH = 16;
         private const int LIGHT_HEIGHT = 16;
-        private const float LIGHT_SCALE = 10f;
 
         private static MouseState _mouseState;
 
