@@ -23,34 +23,45 @@ namespace TurnOnTheLight.Scenes
         public void Draw(SpriteBatch spriteBatch)
         {
             _backgroundSprite.Draw(spriteBatch, Vector2.Zero);
+            _levelButton.Draw(spriteBatch);
         }
 
         public void Load()
         {
-            _backgroundSpritesheet = _contentManager.Load<Texture2D>("backgroundMenu");
+            _backgroundSpritesheet = _contentManager.Load<Texture2D>("backgroundLevelMenu");
+            _levelButtonSpritesheet = _contentManager.Load<Texture2D>("levelButton");
 
             _backgroundSprite = new Sprite(0, 0, BACKGROUND_WIDTH, BACKGROUND_HEIGHT, _backgroundSpritesheet, BACKGROUND_SCALE);
-            Mask.TurnOn();
-            Mask.TurnOffWithAniamtion();
+            _levelButton = new Button(_levelButtonSpritesheet, new Vector2(BUTTON_1_POS_X, BUTTON_1_POS_Y), BUTTON_WIDTH, BUTTON_HEIGHT, BUTTON_SCALE);
         }
-         
+
         public void Update(GameTime gameTime)
         {
-           
-
+            _levelButton.Update(gameTime);
+            if (_levelButton.IsClicked)
+            {
+                _sceneManager.AddScene(new Level1(_contentManager, _sceneManager));
+            }
         }
 
         private ContentManager _contentManager;
         private SceneManager _sceneManager;
 
-        private float _lightAnimationTimer = 0;
-
 
         private Texture2D _backgroundSpritesheet;
+        private Texture2D _levelButtonSpritesheet;
+
         private const int BACKGROUND_WIDTH = 128;
         private const int BACKGROUND_HEIGHT = 128;
         private const float BACKGROUND_SCALE = 10f;
 
+        private const int BUTTON_1_POS_X = 10;
+        private const int BUTTON_1_POS_Y = 10;
+        private const int BUTTON_WIDTH = 16;
+        private const int BUTTON_HEIGHT = 16;
+        private const float BUTTON_SCALE = 3f;
+
         private Sprite _backgroundSprite;
+        private Button _levelButton;
     }
 }

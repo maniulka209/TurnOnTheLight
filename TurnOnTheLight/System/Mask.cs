@@ -17,8 +17,6 @@ namespace TurnOnTheLight.System
 {
     static class Mask
     {
-
-        //TODO: better light drawing (mouse at the center of the light)
         public static Vector2 LightPosition { get; set; } = Vector2.Zero;
 
         public static bool IsOn { get; private set; } = false;
