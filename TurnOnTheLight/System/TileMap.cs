@@ -28,14 +28,14 @@ namespace TurnOnTheLight.System
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach(var item in _tileMap)
+            foreach (var item in _tileMap)
             {
-               Sprite itemSprite = null;
-               if(item.Value == Tile.Solid)
-               {
-                   itemSprite = _solidSprite;
-               }
-               itemSprite?.Draw(spriteBatch, new Vector2(item.Key.X * TILE_WIDTH * TILE_SCALE, item.Key.Y * TILE_HEIGHT * TILE_SCALE));
+                Sprite itemSprite = null;
+                if (item.Value == Tile.Solid)
+                {
+                    itemSprite = _solidSprite;
+                }
+                itemSprite?.Draw(spriteBatch, new Vector2(item.Key.X * TILE_WIDTH * TILE_SCALE, item.Key.Y * TILE_HEIGHT * TILE_SCALE));
             }
         }
         private void setTileMap()
@@ -65,7 +65,7 @@ namespace TurnOnTheLight.System
 
         private const int TILE_WIDTH = 16;
         private const int TILE_HEIGHT = 16;
-        private const float TILE_SCALE = 2f;
+        private const float TILE_SCALE = 4f;
        
     }
 }
