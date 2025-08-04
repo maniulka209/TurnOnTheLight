@@ -27,6 +27,13 @@ namespace TurnOnTheLight.Entities
         }
         public Vector2 Position { get; set; }
         public PlayerState State { get; set; } = PlayerState.idle;
+
+        public Rectangle Rectangle {
+            get 
+            {
+                return new Rectangle((int)Position.X, (int)Position.Y, (int)(PLAYER_WIDTH * PLAYER_SCALE), (int)(PLAYER_HEIGHT * PLAYER_SCALE));
+            } 
+        }
         public void Draw(SpriteBatch spriteBatch)
         {
             _idleSprite.Draw(spriteBatch, Position);

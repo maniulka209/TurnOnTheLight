@@ -24,16 +24,21 @@ namespace TurnOnTheLight.Scenes
         {
             _tileMap.Draw(spriteBatch);
             _player.Draw(spriteBatch);
+            _collisionMap.Draw(spriteBatch);
         }
 
         public void Load()
         {
             _tilesSpritesheet = _contentManager.Load<Texture2D>("tiles");
             _playerSpritesheet = _contentManager.Load<Texture2D>("player");
+            _collionSpritesheet = _contentManager.Load<Texture2D>("collisonSpriteSheet");
 
             _tileMap = new TileMap("../../../Assets/TileMap/level1.csv", _tilesSpritesheet);
             _player = new Player(_playerSpritesheet, Vector2.Zero);
             _inputController = new InputController(_player);
+            _collisionMap = new CollisionMap("../../../Assets/TileMap/level1Collison.csv", _collionSpritesheet);
+
+            _collisionMap.OnCollison += playerStop;
             
         }
 
@@ -41,8 +46,13 @@ namespace TurnOnTheLight.Scenes
         {
             _player.Update(gameTime);
             _inputController.ControlInputs();
+            _collisionMap.Update(gameTime, _player.Rectangle);
         }
 
+        private void playerStop(object sender, EventArgs e)
+        {
+            _player.State = PlayerState.idle;
+        }
         private ContentManager _contentManager;
         private SceneManager _sceneManager;
 
@@ -52,7 +62,9 @@ namespace TurnOnTheLight.Scenes
         private Player _player;
 
         private Texture2D _tilesSpritesheet;
+        private Texture2D _collionSpritesheet;
         private TileMap _tileMap;
+        private CollisionMap _collisionMap;
 
 
     }
