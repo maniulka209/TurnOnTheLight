@@ -14,18 +14,17 @@ namespace TurnOnTheLight.System
 {
     class CollisionMap
     {
-        public CollisionMap(string fileSrc, Texture2D  texture)
+        public CollisionMap(string fileSrc, Texture2D  texture, Player player)
         {
             _fileSrc = fileSrc;
             _collisionMap = new Dictionary<Vector2, int>();
             _testSprite = new Sprite(0, 0, 16, 16, texture, TILE_SCALE);
             _playerCollisionArea = new List<Vector2>();
+            _player = player;
 
             setCollisonMap();
            
         }
-
-        public EventHandler OnCollison;
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var item in _collisionMap)
@@ -44,10 +43,10 @@ namespace TurnOnTheLight.System
             }
         }
 
-        public void Update(GameTime gameTime, Rectangle playerRect)
+        public void Update(GameTime gameTime)
         {
-            setPlayerArea(playerRect);
-            CheckCollison(playerRect);
+            setPlayerArea(_player.Rectangle);
+            CheckCollison(_player.Rectangle);
         }
 
         private void setCollisonMap()
@@ -72,7 +71,7 @@ namespace TurnOnTheLight.System
                 y++;
             }
         }
-        private void CheckCollison(Rectangle playerRect )
+        private void CheckCollison(Rectangle playerRect)
         {
             foreach(Vector2 item in _playerCollisionArea)
             {   
@@ -85,7 +84,7 @@ namespace TurnOnTheLight.System
                     );
                 if (_collisionMap.ContainsKey(item) && itemRec.Intersects(playerRect))
                 {
-                    OnCollison?.Invoke(this, EventArgs.Empty);  
+                    _player.RevertToPreviousPosition(); 
                 }
             }
         }
@@ -111,6 +110,7 @@ namespace TurnOnTheLight.System
 
         private Dictionary<Vector2, int> _collisionMap;
         private List<Vector2> _playerCollisionArea;
+        private Player _player;
         private string _fileSrc;
 
         private Sprite _testSprite;

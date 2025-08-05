@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.MediaFoundation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,7 @@ namespace TurnOnTheLight.Entities
     public enum PlayerState
     {
         idle,
-        GoRight,
-        GoLeft,
-        GoUp,
-        GoDown
+        Go,
     }
 
     class Player : IEntity
@@ -26,6 +24,7 @@ namespace TurnOnTheLight.Entities
             this.Position = position;
         }
         public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
         public PlayerState State { get; set; } = PlayerState.idle;
 
         public Rectangle Rectangle {
@@ -41,28 +40,24 @@ namespace TurnOnTheLight.Entities
 
         public void Update(GameTime gameTime)
         {
-            switch(State)
+            _prevPosition = Position;
+
+            if(State == PlayerState.Go)
             {
-                case PlayerState.GoRight:
-                    Position = new Vector2(Position.X  + (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED , Position.Y);
-                    break;
-
-                case PlayerState.GoLeft:
-                    Position = new Vector2(Position.X - (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED, Position.Y);
-                    break;
-
-                case PlayerState.GoUp:
-                    Position = new Vector2(Position.X, Position.Y - (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED);
-                    break;
-
-                case PlayerState.GoDown:
-                    Position = new Vector2(Position.X, Position.Y + (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED);
-                    break;
-
+                Position = new Vector2(
+                    Position.X +( Velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds),
+                    Position.Y + ((Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds))
+                    );
             }
         }
 
+        public void RevertToPreviousPosition()
+        {
+            Position = _prevPosition;
+        }
+
         private Sprite _idleSprite;
+        private Vector2 _prevPosition;
 
         private const int PLAYER_WIDTH = 16;
         private const int PLAYER_HEIGHT = 16;

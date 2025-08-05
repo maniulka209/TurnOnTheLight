@@ -36,9 +36,7 @@ namespace TurnOnTheLight.Scenes
             _tileMap = new TileMap("../../../Assets/TileMap/level1.csv", _tilesSpritesheet);
             _player = new Player(_playerSpritesheet, Vector2.Zero);
             _inputController = new InputController(_player);
-            _collisionMap = new CollisionMap("../../../Assets/TileMap/level1Collison.csv", _collionSpritesheet);
-
-            _collisionMap.OnCollison += playerStop;
+            _collisionMap = new CollisionMap("../../../Assets/TileMap/level1Collison.csv", _collionSpritesheet, _player);
             
         }
 
@@ -46,13 +44,9 @@ namespace TurnOnTheLight.Scenes
         {
             _player.Update(gameTime);
             _inputController.ControlInputs();
-            _collisionMap.Update(gameTime, _player.Rectangle);
+            _collisionMap.Update(gameTime);
         }
 
-        private void playerStop(object sender, EventArgs e)
-        {
-            _player.State = PlayerState.idle;
-        }
         private ContentManager _contentManager;
         private SceneManager _sceneManager;
 
