@@ -18,28 +18,25 @@ namespace TurnOnTheLight.System
         {
             _fileSrc = fileSrc;
             _collisionMap = new Dictionary<Vector2, int>();
-            _testSprite = new Sprite(0, 0, 16, 16, texture, TILE_SCALE);
+            _collisionSprite = new Sprite(0, 0, 16, 16, texture, TILE_SCALE);
             _playerCollisionArea = new List<Vector2>();
             _player = player;
 
             setCollisonMap();
            
         }
+
+        public EventHandler OnPlayerTouchTheDoor;
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach (var item in _collisionMap)
             {
-                Sprite itemSprite = null;
-                if (item.Value == 1)
-                {
-                    itemSprite = _testSprite;
-                }
-                itemSprite?.Draw(spriteBatch, new Vector2(item.Key.X * TILE_WIDTH * TILE_SCALE, item.Key.Y * TILE_HEIGHT * TILE_SCALE));
+                _collisionSprite.Draw(spriteBatch, new Vector2(item.Key.X * TILE_WIDTH * TILE_SCALE, item.Key.Y * TILE_HEIGHT * TILE_SCALE));
             }
 
             foreach (var item in _playerCollisionArea)
             {
-                _testSprite.Draw(spriteBatch, new Vector2(item.X * TILE_WIDTH * TILE_SCALE , item.Y * TILE_HEIGHT * TILE_SCALE));
+                _collisionSprite.Draw(spriteBatch, new Vector2(item.X * TILE_WIDTH * TILE_SCALE , item.Y * TILE_HEIGHT * TILE_SCALE));
             }
         }
 
@@ -62,7 +59,7 @@ namespace TurnOnTheLight.System
                 {
                     if (int.TryParse(items[x], out int value))
                     {
-                        if(value == 1)
+                        if(value != 0)
                         {
                             _collisionMap.Add(new Vector2(x, y), value);
                         }
@@ -84,7 +81,15 @@ namespace TurnOnTheLight.System
                     );
                 if (_collisionMap.ContainsKey(item) && itemRec.Intersects(playerRect))
                 {
-                    _player.RevertToPreviousPosition(); 
+                    if( _collisionMap[item] == 1)
+                    {
+                        _player.RevertToPreviousPosition();
+                    }
+                    else if ( _collisionMap[item] == 2)
+                    {
+                       OnPlayerTouchTheDoor?.Invoke(this, EventArgs.Empty);
+                    }
+                    
                 }
             }
         }
@@ -113,7 +118,7 @@ namespace TurnOnTheLight.System
         private Player _player;
         private string _fileSrc;
 
-        private Sprite _testSprite;
+        private Sprite _collisionSprite;
 
         private const int TILE_WIDTH = 16;
         private const int TILE_HEIGHT = 16;

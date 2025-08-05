@@ -37,6 +37,8 @@ namespace TurnOnTheLight.Scenes
             _player = new Player(_playerSpritesheet, Vector2.Zero);
             _inputController = new InputController(_player);
             _collisionMap = new CollisionMap("../../../Assets/TileMap/level1Collison.csv", _collionSpritesheet, _player);
+
+            _collisionMap.OnPlayerTouchTheDoor += goNextLvl;
             
         }
 
@@ -45,6 +47,11 @@ namespace TurnOnTheLight.Scenes
             _player.Update(gameTime);
             _inputController.ControlInputs();
             _collisionMap.Update(gameTime);
+        }
+
+        private void goNextLvl(object sender, EventArgs e)
+        {
+            _sceneManager.AddScene(new Level2(_contentManager,_sceneManager));
         }
 
         private ContentManager _contentManager;

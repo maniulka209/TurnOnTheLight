@@ -14,7 +14,8 @@ namespace TurnOnTheLight.System
     public enum Tile
     {
         Empty,
-        Solid
+        Solid,
+        Door,
     }
     class TileMap
     { 
@@ -24,6 +25,7 @@ namespace TurnOnTheLight.System
             _tileMap = new Dictionary<Vector2, Tile>();
 
             _solidSprite = new Sprite(0,0,TILE_WIDTH,TILE_HEIGHT, tilesTexture, TILE_SCALE);
+            _doorSprite = new Sprite(TILE_WIDTH,0,TILE_WIDTH,TILE_HEIGHT,tilesTexture, TILE_SCALE);
             setTileMap();
         }
         public void Draw(SpriteBatch spriteBatch)
@@ -35,7 +37,11 @@ namespace TurnOnTheLight.System
                 {
                     itemSprite = _solidSprite;
                 }
-                itemSprite?.Draw(spriteBatch, new Vector2(item.Key.X * TILE_WIDTH * TILE_SCALE, item.Key.Y * TILE_HEIGHT * TILE_SCALE));
+                else if (item.Value == Tile.Door)
+                {
+                    itemSprite = _doorSprite;
+                }
+                    itemSprite?.Draw(spriteBatch, new Vector2(item.Key.X * TILE_WIDTH * TILE_SCALE, item.Key.Y * TILE_HEIGHT * TILE_SCALE));
             }
         }
         private void setTileMap()
@@ -62,6 +68,7 @@ namespace TurnOnTheLight.System
         private string _fileSrc;
 
         private Sprite _solidSprite;
+        private Sprite _doorSprite;
 
         private const int TILE_WIDTH = 16;
         private const int TILE_HEIGHT = 16;
