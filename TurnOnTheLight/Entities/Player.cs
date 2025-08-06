@@ -14,6 +14,7 @@ namespace TurnOnTheLight.Entities
     {
         idle,
         Go,
+        Jump,
     }
 
     class Player : IEntity
@@ -24,7 +25,10 @@ namespace TurnOnTheLight.Entities
             this.Position = position;
         }
         public Vector2 Position { get; set; }
-        public Vector2 Velocity { get; set; }
+        public Vector2 PreviousPosition { get; set; }
+        public Vector2 movementDirectory { get; set; }
+
+        public bool IsGravitiOn { get; set; } = true;
         public PlayerState State { get; set; } = PlayerState.idle;
 
         public Rectangle Rectangle {
@@ -40,30 +44,34 @@ namespace TurnOnTheLight.Entities
 
         public void Update(GameTime gameTime)
         {
-            _prevPosition = Position;
+
+            PreviousPosition = Position;
+
+            if (IsGravitiOn) { 
+                this.Position = new Vector2(
+                    Position.X,
+                    Position.Y + (GRAVITY * (float)gameTime.ElapsedGameTime.TotalSeconds)
+                    );
+            }
 
             if(State == PlayerState.Go)
             {
                 Position = new Vector2(
-                    Position.X +( Velocity.X * (float)gameTime.ElapsedGameTime.TotalSeconds),
-                    Position.Y + ((Velocity.Y * (float)gameTime.ElapsedGameTime.TotalSeconds))
+                    Position.X +( movementDirectory.X * (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED),
+                    Position.Y + (movementDirectory.Y * (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED)
                     );
             }
-        }
 
-        public void RevertToPreviousPosition()
-        {
-            Position = _prevPosition;
         }
 
         private Sprite _idleSprite;
-        private Vector2 _prevPosition;
 
         private const int PLAYER_WIDTH = 16;
         private const int PLAYER_HEIGHT = 16;
         private const float PLAYER_SCALE = 2f;
 
         private const int PLAYER_SPEED = 200;
+        private const int GRAVITY = 400;
         
 
     }

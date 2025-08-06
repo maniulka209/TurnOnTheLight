@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,32 +21,35 @@ namespace TurnOnTheLight.System
         {
             _keyboardState = Keyboard.GetState();
 
-            _player.Velocity = Vector2.Zero;
+            _player.movementDirectory = Vector2.Zero;
             _player.State = PlayerState.idle;
 
             //MOVE HORIZONAL
             if ( _keyboardState.IsKeyDown(Keys.Left))
             {
-                _player.Velocity = new Vector2(-PLAYER_SPEED, 0);
+                _player.movementDirectory = new Vector2(-1, 0);
                 _player.State = PlayerState.Go;
             }
             else if (_keyboardState.IsKeyDown(Keys.Right))
             {
-                _player.Velocity = new Vector2(PLAYER_SPEED, 0);
+                _player.movementDirectory = new Vector2(1, 0);
                 _player.State = PlayerState.Go;
             }
 
             //MOVE VERTICLY
             if (_keyboardState.IsKeyDown(Keys.Up))
             {
-                _player.Velocity = new Vector2(_player.Velocity.X,-PLAYER_SPEED);
+                _player.movementDirectory = new Vector2(_player.movementDirectory.X,-1);
                 _player.State = PlayerState.Go;
             }
             else if (_keyboardState.IsKeyDown(Keys.Down))
             {
                 _player.State = PlayerState.Go;
-                _player.Velocity = new Vector2(_player.Velocity.X, PLAYER_SPEED);
+                _player.movementDirectory = new Vector2(_player.movementDirectory.X, 1);
             }
+
+            float lenght = (float)Math.Sqrt(Math.Pow(_player.movementDirectory.X, 2) + Math.Pow(_player.movementDirectory.Y, 2));
+            _player.movementDirectory = new Vector2(_player.movementDirectory.X / lenght, _player.movementDirectory.Y / lenght);
 
             _prevKeyboardState = _keyboardState;
         } 
@@ -54,6 +58,6 @@ namespace TurnOnTheLight.System
         private KeyboardState _prevKeyboardState;
         private Player _player;
 
-        private const int PLAYER_SPEED = 200;
+
     }
 }

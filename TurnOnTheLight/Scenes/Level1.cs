@@ -44,8 +44,8 @@ namespace TurnOnTheLight.Scenes
 
         public void Update(GameTime gameTime)
         {
-            _player.Update(gameTime);
             _inputController.ControlInputs();
+            _player.Update(gameTime);
             _collisionMap.Update(gameTime);
         }
 
