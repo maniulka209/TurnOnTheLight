@@ -13,7 +13,6 @@ namespace TurnOnTheLight.Entities
     public enum PlayerState
     {
         idle,
-        Go,
         Jump,
     }
 
@@ -47,21 +46,40 @@ namespace TurnOnTheLight.Entities
 
             PreviousPosition = Position;
 
+            Position = new Vector2(
+                Position.X + (movementDirectory.X * (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED),
+                Position.Y + (movementDirectory.Y * (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED)
+                );
+
             if (IsGravitiOn) { 
                 this.Position = new Vector2(
                     Position.X,
                     Position.Y + (GRAVITY * (float)gameTime.ElapsedGameTime.TotalSeconds)
                     );
             }
-
-            if(State == PlayerState.Go)
+            if(State == PlayerState.Jump)
             {
                 Position = new Vector2(
-                    Position.X +( movementDirectory.X * (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED),
-                    Position.Y + (movementDirectory.Y * (float)gameTime.ElapsedGameTime.TotalSeconds * PLAYER_SPEED)
-                    );
-            }
+                   Position.X,
+                   Position.Y - ((float)gameTime.ElapsedGameTime.TotalSeconds * JUMP_VELOCITY)
+                   );
 
+                _passedJumpDistance += (float)gameTime.ElapsedGameTime.TotalSeconds * JUMP_VELOCITY;
+                if(_passedJumpDistance >= MAX_JUMP_HEIGHT)
+                {
+                    this.State = PlayerState.idle;
+                }
+
+            }
+        }
+
+        public void Jump()
+        {
+            if(State != PlayerState.Jump)
+            {
+                State = PlayerState.Jump;
+                _passedJumpDistance = 0;
+            }
         }
 
         private Sprite _idleSprite;
@@ -73,6 +91,9 @@ namespace TurnOnTheLight.Entities
         private const int PLAYER_SPEED = 200;
         private const int GRAVITY = 400;
         
+        private const  int JUMP_VELOCITY = 500;
+        private float MAX_JUMP_HEIGHT = 100;
+        private float _passedJumpDistance;
 
     }
 }

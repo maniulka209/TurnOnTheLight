@@ -22,35 +22,31 @@ namespace TurnOnTheLight.System
             _keyboardState = Keyboard.GetState();
 
             _player.movementDirectory = Vector2.Zero;
-            _player.State = PlayerState.idle;
 
             //MOVE HORIZONAL
             if ( _keyboardState.IsKeyDown(Keys.Left))
             {
                 _player.movementDirectory = new Vector2(-1, 0);
-                _player.State = PlayerState.Go;
             }
             else if (_keyboardState.IsKeyDown(Keys.Right))
             {
                 _player.movementDirectory = new Vector2(1, 0);
-                _player.State = PlayerState.Go;
             }
 
             //MOVE VERTICLY
-            if (_keyboardState.IsKeyDown(Keys.Up))
+            if (_keyboardState.IsKeyDown(Keys.Up) && !_prevKeyboardState.IsKeyDown(Keys.Up))
             {
                 _player.movementDirectory = new Vector2(_player.movementDirectory.X,-1);
-                _player.State = PlayerState.Go;
+                _player.Jump();
             }
-            else if (_keyboardState.IsKeyDown(Keys.Down))
+
+
+
+            if(_player.movementDirectory != Vector2.Zero)
             {
-                _player.State = PlayerState.Go;
-                _player.movementDirectory = new Vector2(_player.movementDirectory.X, 1);
+               float lenght = (float)Math.Sqrt(Math.Pow(_player.movementDirectory.X, 2) + Math.Pow(_player.movementDirectory.Y, 2));
+               _player.movementDirectory = new Vector2(_player.movementDirectory.X / lenght, _player.movementDirectory.Y / lenght);
             }
-
-            float lenght = (float)Math.Sqrt(Math.Pow(_player.movementDirectory.X, 2) + Math.Pow(_player.movementDirectory.Y, 2));
-            _player.movementDirectory = new Vector2(_player.movementDirectory.X / lenght, _player.movementDirectory.Y / lenght);
-
             _prevKeyboardState = _keyboardState;
         } 
 
