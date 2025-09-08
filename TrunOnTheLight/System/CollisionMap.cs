@@ -1,4 +1,4 @@
-﻿using Accessibility;
+﻿
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,7 +8,6 @@ using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using TurnOnTheLight.Entities;
 using TurnOnTheLight.Graphics;
 

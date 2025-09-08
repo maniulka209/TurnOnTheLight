@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
 using TurnOnTheLight.System;
 using TurnOnTheLight.Graphics;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
+
 
 namespace TurnOnTheLight.Scenes
 {
